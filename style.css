@@ -220,3 +220,49 @@ button:active {
 .page.active-page {
     display: block;
 }
+
+/* ====================
+   記録フォーム
+==================== */
+
+.record-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.record-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.record-form input,
+.record-form textarea {
+    width: 100%;
+
+    border: 1px solid #D8E3E7;
+    border-radius: 12px;
+
+    padding: 12px;
+
+    background: #F8FBFC;
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.record-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.record-form input:focus,
+.record-form textarea:focus {
+    outline: 2px solid var(--asagi);
+    border-color: transparent;
+}
