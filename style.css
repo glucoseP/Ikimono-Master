@@ -295,10 +295,14 @@ button:active {
 ==================== */
 
 #catalog-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
 }
+
 
 .organism-card {
     overflow: hidden;
@@ -306,37 +310,68 @@ button:active {
     background: var(--background);
 
     border-radius: 16px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s,
+        box-shadow 0.15s;
 }
 
+
+.organism-card:active {
+
+    transform: scale(0.97);
+
+}
+
+
 .organism-image {
+
     display: block;
 
     width: 100%;
-    height: 220px;
+
+    aspect-ratio: 1 / 1;
 
     object-fit: cover;
+
 }
+
 
 .organism-info {
-    padding: 16px;
+
+    padding: 12px;
+
 }
+
 
 .organism-info h3 {
-    margin: 0 0 10px;
 
-    font-size: 20px;
+    margin: 0 0 7px;
 
-    color: var(--text);
+    font-size: 17px;
+
+    line-height: 1.3;
+
 }
+
 
 .organism-info p {
-    margin: 6px 0;
 
-    font-size: 14px;
+    margin: 4px 0;
+
+    font-size: 12px;
+
 }
 
+
 .empty-message {
+
+    grid-column: 1 / -1;
+
     margin: 0;
 
     color: var(--twilight);
+
 }
