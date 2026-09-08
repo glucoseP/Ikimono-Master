@@ -22,7 +22,7 @@ body {
 }
 
 header {
-    background: var(--blue);
+    background: var(--dark-blue);
     color: white;
     padding: 28px 20px;
     border-radius: 0 0 24px 24px;
