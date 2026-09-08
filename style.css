@@ -208,3 +208,15 @@ button:active {
 .bottom-nav .nav-item:active {
     transform: scale(0.92);
 }
+
+/* ====================
+   ページ切り替え
+==================== */
+
+.page {
+    display: none;
+}
+
+.page.active-page {
+    display: block;
+}
