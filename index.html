@@ -1,27 +1,57 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>いきものマスター</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<header>
     <h1>🦎 いきものマスター</h1>
-
     <p>あなたの生き物図鑑をつくろう！</p>
+</header>
 
-    <hr>
+<main>
 
-    <h2>🌱 いきもの探偵</h2>
+    <section class="card">
+        <h2>🌱 いきもの探偵</h2>
 
-    <p>EXP：0</p>
-    <p>発見した種：0種</p>
-    <p>投稿数：0件</p>
+        <p>EXP：0</p>
 
-    <button>＋ 生き物を記録する</button>
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">0</span>
+                <span class="stat-label">発見した種</span>
+            </div>
+
+            <div class="stat">
+                <span class="stat-number">0</span>
+                <span class="stat-label">投稿数</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>📸 生き物を記録</h2>
+
+        <button>
+            ＋ 生き物を記録する
+        </button>
+    </section>
+
+    <section class="card">
+        <h2>📖 マイ図鑑</h2>
+
+        <p>まだ生き物が登録されていません。</p>
+    </section>
+
+</main>
 
 </body>
 </html>
