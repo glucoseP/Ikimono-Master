@@ -1,3 +1,4 @@
+```javascript
 // ====================
 // ページ切り替え
 // ====================
@@ -9,21 +10,21 @@ navItems.forEach((item, index) => {
 
     item.addEventListener("click", () => {
 
-        // ナビの選択状態を変更
+        // ナビの選択状態
         navItems.forEach(nav => {
             nav.classList.remove("active");
         });
 
         item.classList.add("active");
 
-        // ページを切り替える
+        // ページ切り替え
         pages.forEach(page => {
             page.classList.remove("active-page");
         });
 
         pages[index].classList.add("active-page");
 
-        // 図鑑ページを開いたら更新
+        // 図鑑を開いたとき更新
         if (pages[index].id === "catalog") {
             displayOrganisms();
         }
@@ -34,7 +35,7 @@ navItems.forEach((item, index) => {
 
 
 // ====================
-// 画像選択・プレビュー
+// 画像関連
 // ====================
 
 const imageInput =
@@ -46,13 +47,128 @@ const imagePreview =
 const imagePreviewContainer =
     document.getElementById("image-preview-container");
 
+
+// 保存する画像データ
 let selectedImage = "";
 
 
+// ====================
+// 画像を縮小・圧縮する
+// ====================
+
+function resizeImage(file) {
+
+    return new Promise((resolve, reject) => {
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+
+            const image = new Image();
+
+            image.onload = () => {
+
+                // 最大サイズ
+                const maxSize = 1200;
+
+                let width = image.width;
+                let height = image.height;
+
+
+                // 横長
+                if (width > height && width > maxSize) {
+
+                    height =
+                        Math.round(
+                            height * maxSize / width
+                        );
+
+                    width = maxSize;
+
+                }
+
+                // 縦長
+                else if (height > maxSize) {
+
+                    width =
+                        Math.round(
+                            width * maxSize / height
+                        );
+
+                    height = maxSize;
+
+                }
+
+
+                // Canvasを作成
+                const canvas =
+                    document.createElement("canvas");
+
+                canvas.width = width;
+                canvas.height = height;
+
+
+                const ctx =
+                    canvas.getContext("2d");
+
+
+                // 画像を描画
+                ctx.drawImage(
+                    image,
+                    0,
+                    0,
+                    width,
+                    height
+                );
+
+
+                // JPEGとして圧縮
+                const compressedImage =
+                    canvas.toDataURL(
+                        "image/jpeg",
+                        0.8
+                    );
+
+
+                resolve(compressedImage);
+
+            };
+
+
+            image.onerror = () => {
+                reject(
+                    new Error("画像の読み込みに失敗しました")
+                );
+            };
+
+
+            image.src = event.target.result;
+
+        };
+
+
+        reader.onerror = () => {
+            reject(
+                new Error("ファイルの読み込みに失敗しました")
+            );
+        };
+
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+
+// ====================
 // 写真が選択されたとき
-imageInput.addEventListener("change", () => {
+// ====================
+
+imageInput.addEventListener("change", async () => {
 
     const file = imageInput.files[0];
+
 
     if (!file) {
 
@@ -63,21 +179,43 @@ imageInput.addEventListener("change", () => {
         imagePreviewContainer.style.display = "none";
 
         return;
+
     }
 
-    const reader = new FileReader();
 
-    reader.onload = (event) => {
+    // 画像ファイルか確認
+    if (!file.type.startsWith("image/")) {
 
-        selectedImage = event.target.result;
+        alert("画像ファイルを選んでね！");
 
+        imageInput.value = "";
+
+        return;
+
+    }
+
+
+    try {
+
+        // 画像を縮小・圧縮
+        selectedImage =
+            await resizeImage(file);
+
+
+        // プレビュー
         imagePreview.src = selectedImage;
 
-        imagePreviewContainer.style.display = "block";
+        imagePreviewContainer.style.display =
+            "block";
 
-    };
 
-    reader.readAsDataURL(file);
+    } catch (error) {
+
+        console.error(error);
+
+        alert("画像の読み込みに失敗しました。");
+
+    }
 
 });
 
@@ -122,10 +260,11 @@ registerButton.addEventListener("click", () => {
         alert("生き物の名前を入力してね！");
 
         return;
+
     }
 
 
-    // 保存済みデータを取得
+    // 保存済みデータ
     const organisms =
         JSON.parse(
             localStorage.getItem("organisms")
@@ -166,7 +305,10 @@ registerButton.addEventListener("click", () => {
     );
 
 
+    // ====================
     // フォームをリセット
+    // ====================
+
     document
         .getElementById("organism-name")
         .value = "";
@@ -183,16 +325,18 @@ registerButton.addEventListener("click", () => {
         .getElementById("organism-note")
         .value = "";
 
+
     imageInput.value = "";
 
     selectedImage = "";
 
     imagePreview.src = "";
 
-    imagePreviewContainer.style.display = "none";
+    imagePreviewContainer.style.display =
+        "none";
 
 
-    // 図鑑も更新
+    // 図鑑を更新
     displayOrganisms();
 
 });
@@ -206,6 +350,7 @@ function displayOrganisms() {
 
     const catalogList =
         document.getElementById("catalog-list");
+
 
     if (!catalogList) {
         return;
@@ -223,7 +368,7 @@ function displayOrganisms() {
     catalogList.innerHTML = "";
 
 
-    // 登録されていない場合
+    // データがない場合
     if (organisms.length === 0) {
 
         catalogList.innerHTML = `
@@ -233,10 +378,11 @@ function displayOrganisms() {
         `;
 
         return;
+
     }
 
 
-    // 新しい順に表示
+    // 新しい順
     organisms
         .slice()
         .reverse()
@@ -245,51 +391,71 @@ function displayOrganisms() {
             const card =
                 document.createElement("article");
 
-            card.className = "organism-card";
+            card.className =
+                "organism-card";
 
 
-            // 写真がある場合
+            // 写真
             if (organism.image) {
 
-                card.innerHTML += `
-                    <img
-                        src="${organism.image}"
-                        alt="${organism.name}"
-                        class="organism-image"
-                    >
+                const image =
+                    document.createElement("img");
+
+                image.src = organism.image;
+
+                image.alt = organism.name;
+
+                image.className =
+                    "organism-image";
+
+                card.appendChild(image);
+
+            }
+
+
+            // 情報
+            const info =
+                document.createElement("div");
+
+            info.className =
+                "organism-info";
+
+
+            let html = `
+                <h3>${organism.name}</h3>
+            `;
+
+
+            if (organism.place) {
+
+                html += `
+                    <p>📍 ${organism.place}</p>
                 `;
 
             }
 
 
-            card.innerHTML += `
-                <div class="organism-info">
+            if (organism.date) {
 
-                    <h3>
-                        ${organism.name}
-                    </h3>
+                html += `
+                    <p>📅 ${organism.date}</p>
+                `;
 
-                    ${
-                        organism.place
-                            ? `<p>📍 ${organism.place}</p>`
-                            : ""
-                    }
+            }
 
-                    ${
-                        organism.date
-                            ? `<p>📅 ${organism.date}</p>`
-                            : ""
-                    }
 
-                    ${
-                        organism.note
-                            ? `<p>📝 ${organism.note}</p>`
-                            : ""
-                    }
+            if (organism.note) {
 
-                </div>
-            `;
+                html += `
+                    <p>📝 ${organism.note}</p>
+                `;
 
+            }
+
+
+            info.innerHTML = html;
+
+            card.appendChild(info);
 
             catalogList.appendChild(card);
 
@@ -303,3 +469,4 @@ function displayOrganisms() {
 // ====================
 
 displayOrganisms();
+```
