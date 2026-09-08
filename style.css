@@ -151,33 +151,36 @@ button:active {
     right: 0;
     bottom: 0;
 
-    height: 64px;
+    height: 72px;
 
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     background: white;
 
     border-top: 1px solid #E2EAED;
 
     z-index: 100;
+
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* ナビのボタン */
+/* ナビボタン */
 
 .bottom-nav .nav-item {
     flex: 1;
 
     width: 25%;
-    height: 64px;
+    height: 52px;
 
-    margin: 0;
+    margin: 0 8px;
     padding: 0;
 
     border: none;
-    border-radius: 0;
+    border-radius: 16px;
 
-    background: transparent;
+    background: #EEF3F6;
 
     color: var(--twilight);
 
@@ -185,11 +188,22 @@ button:active {
     align-items: center;
     justify-content: center;
 
-    font-size: 25px;
+    font-size: 24px;
+
+    transition: 0.15s;
 }
 
 /* 選択中 */
 
 .bottom-nav .nav-item.active {
-    color: var(--asagi);
+    background: var(--asagi);
+    color: white;
+
+    box-shadow: 0 3px 8px rgba(0, 163, 175, 0.25);
+}
+
+/* タップ時 */
+
+.bottom-nav .nav-item:active {
+    transform: scale(0.92);
 }
