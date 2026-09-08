@@ -1,32 +1,64 @@
-```javascript
+// ====================
+// データ
+// ====================
+
+function getOrganisms() {
+
+    return JSON.parse(
+        localStorage.getItem("organisms")
+    ) || [];
+
+}
+
+
+function saveOrganisms(organisms) {
+
+    localStorage.setItem(
+        "organisms",
+        JSON.stringify(organisms)
+    );
+
+}
+
+
 // ====================
 // ページ切り替え
 // ====================
 
-const navItems = document.querySelectorAll(".nav-item");
-const pages = document.querySelectorAll(".page");
+const navItems =
+    document.querySelectorAll(".nav-item");
+
+const pages =
+    document.querySelectorAll(".page");
+
 
 navItems.forEach((item, index) => {
 
     item.addEventListener("click", () => {
 
-        // ナビの選択状態
         navItems.forEach(nav => {
             nav.classList.remove("active");
         });
 
         item.classList.add("active");
 
-        // ページ切り替え
+
         pages.forEach(page => {
             page.classList.remove("active-page");
         });
 
-        pages[index].classList.add("active-page");
+        pages[index].classList.add(
+            "active-page"
+        );
 
-        // 図鑑を開いたとき更新
+
         if (pages[index].id === "catalog") {
             displayOrganisms();
+        }
+
+
+        if (pages[index].id === "home") {
+            updateStats();
         }
 
     });
@@ -35,7 +67,7 @@ navItems.forEach((item, index) => {
 
 
 // ====================
-// 画像関連
+// 画像
 // ====================
 
 const imageInput =
@@ -45,74 +77,93 @@ const imagePreview =
     document.getElementById("image-preview");
 
 const imagePreviewContainer =
-    document.getElementById("image-preview-container");
+    document.getElementById(
+        "image-preview-container"
+    );
 
 
-// 保存する画像データ
 let selectedImage = "";
 
 
 // ====================
-// 画像を縮小・圧縮する
+// 画像を縮小・圧縮
 // ====================
 
 function resizeImage(file) {
 
     return new Promise((resolve, reject) => {
 
-        const reader = new FileReader();
+        const reader =
+            new FileReader();
+
 
         reader.onload = (event) => {
 
-            const image = new Image();
+            const image =
+                new Image();
+
 
             image.onload = () => {
 
                 // 最大サイズ
-                const maxSize = 1200;
+                const maxSize = 1600;
 
-                let width = image.width;
-                let height = image.height;
+                let width =
+                    image.width;
+
+                let height =
+                    image.height;
 
 
                 // 横長
-                if (width > height && width > maxSize) {
+                if (
+                    width > height &&
+                    width > maxSize
+                ) {
 
-                    height =
-                        Math.round(
-                            height * maxSize / width
-                        );
+                    height = Math.round(
+                        height *
+                        maxSize /
+                        width
+                    );
 
                     width = maxSize;
 
                 }
 
-                // 縦長
-                else if (height > maxSize) {
 
-                    width =
-                        Math.round(
-                            width * maxSize / height
-                        );
+                // 縦長
+                else if (
+                    height > maxSize
+                ) {
+
+                    width = Math.round(
+                        width *
+                        maxSize /
+                        height
+                    );
 
                     height = maxSize;
 
                 }
 
 
-                // Canvasを作成
                 const canvas =
-                    document.createElement("canvas");
+                    document.createElement(
+                        "canvas"
+                    );
+
 
                 canvas.width = width;
                 canvas.height = height;
 
 
                 const ctx =
-                    canvas.getContext("2d");
+                    canvas.getContext(
+                        "2d"
+                    );
 
 
-                // 画像を描画
                 ctx.drawImage(
                     image,
                     0,
@@ -122,35 +173,46 @@ function resizeImage(file) {
                 );
 
 
-                // JPEGとして圧縮
+                // JPEG 85%
                 const compressedImage =
                     canvas.toDataURL(
                         "image/jpeg",
-                        0.8
+                        0.85
                     );
 
 
-                resolve(compressedImage);
+                resolve(
+                    compressedImage
+                );
 
             };
 
 
             image.onerror = () => {
+
                 reject(
-                    new Error("画像の読み込みに失敗しました")
+                    new Error(
+                        "画像の読み込みに失敗しました"
+                    )
                 );
+
             };
 
 
-            image.src = event.target.result;
+            image.src =
+                event.target.result;
 
         };
 
 
         reader.onerror = () => {
+
             reject(
-                new Error("ファイルの読み込みに失敗しました")
+                new Error(
+                    "ファイルの読み込みに失敗しました"
+                )
             );
+
         };
 
 
@@ -162,167 +224,209 @@ function resizeImage(file) {
 
 
 // ====================
-// 写真が選択されたとき
+// 写真選択
 // ====================
 
-imageInput.addEventListener("change", async () => {
+imageInput.addEventListener(
+    "change",
+    async () => {
 
-    const file = imageInput.files[0];
+        const file =
+            imageInput.files[0];
 
 
-    if (!file) {
+        if (!file) {
 
-        selectedImage = "";
+            selectedImage = "";
 
-        imagePreview.src = "";
+            imagePreview.src = "";
 
-        imagePreviewContainer.style.display = "none";
+            imagePreviewContainer.style.display =
+                "none";
 
-        return;
+            return;
+
+        }
+
+
+        if (!file.type.startsWith("image/")) {
+
+            alert(
+                "画像ファイルを選んでね！"
+            );
+
+            imageInput.value = "";
+
+            return;
+
+        }
+
+
+        try {
+
+            selectedImage =
+                await resizeImage(file);
+
+
+            imagePreview.src =
+                selectedImage;
+
+
+            imagePreviewContainer.style.display =
+                "block";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "画像の読み込みに失敗しました。"
+            );
+
+        }
 
     }
-
-
-    // 画像ファイルか確認
-    if (!file.type.startsWith("image/")) {
-
-        alert("画像ファイルを選んでね！");
-
-        imageInput.value = "";
-
-        return;
-
-    }
-
-
-    try {
-
-        // 画像を縮小・圧縮
-        selectedImage =
-            await resizeImage(file);
-
-
-        // プレビュー
-        imagePreview.src = selectedImage;
-
-        imagePreviewContainer.style.display =
-            "block";
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("画像の読み込みに失敗しました。");
-
-    }
-
-});
+);
 
 
 // ====================
-// 生き物を登録
+// 生き物登録
 // ====================
 
 const registerButton =
-    document.getElementById("register-button");
+    document.getElementById(
+        "register-button"
+    );
 
 
-registerButton.addEventListener("click", () => {
+registerButton.addEventListener(
+    "click",
+    () => {
 
-    const name =
-        document
-            .getElementById("organism-name")
-            .value
-            .trim();
-
-    const place =
-        document
-            .getElementById("organism-place")
-            .value
-            .trim();
-
-    const date =
-        document
-            .getElementById("organism-date")
-            .value;
-
-    const note =
-        document
-            .getElementById("organism-note")
-            .value
-            .trim();
+        const name =
+            document
+                .getElementById(
+                    "organism-name"
+                )
+                .value
+                .trim();
 
 
-    // 名前は必須
-    if (!name) {
+        const place =
+            document
+                .getElementById(
+                    "organism-place"
+                )
+                .value
+                .trim();
 
-        alert("生き物の名前を入力してね！");
 
-        return;
+        const date =
+            document
+                .getElementById(
+                    "organism-date"
+                )
+                .value;
+
+
+        const note =
+            document
+                .getElementById(
+                    "organism-note"
+                )
+                .value
+                .trim();
+
+
+        if (!name) {
+
+            alert(
+                "生き物の名前を入力してね！"
+            );
+
+            return;
+
+        }
+
+
+        const organisms =
+            getOrganisms();
+
+
+        const organism = {
+
+            id: Date.now(),
+
+            name: name,
+
+            place: place,
+
+            date: date,
+
+            note: note,
+
+            image: selectedImage
+
+        };
+
+
+        organisms.push(
+            organism
+        );
+
+
+        saveOrganisms(
+            organisms
+        );
+
+
+        alert(
+            `${name}を図鑑に登録したよ！`
+        );
+
+
+        resetForm();
+
+        displayOrganisms();
+
+        updateStats();
 
     }
+);
 
 
-    // 保存済みデータ
-    const organisms =
-        JSON.parse(
-            localStorage.getItem("organisms")
-        ) || [];
+// ====================
+// フォームリセット
+// ====================
 
-
-    // 新しい生き物
-    const organism = {
-
-        id: Date.now(),
-
-        name: name,
-
-        place: place,
-
-        date: date,
-
-        note: note,
-
-        image: selectedImage
-
-    };
-
-
-    // データを追加
-    organisms.push(organism);
-
-
-    // 保存
-    localStorage.setItem(
-        "organisms",
-        JSON.stringify(organisms)
-    );
-
-
-    alert(
-        `${name}を図鑑に登録したよ！`
-    );
-
-
-    // ====================
-    // フォームをリセット
-    // ====================
+function resetForm() {
 
     document
-        .getElementById("organism-name")
+        .getElementById(
+            "organism-name"
+        )
         .value = "";
 
-    document
-        .getElementById("organism-place")
-        .value = "";
 
     document
-        .getElementById("organism-date")
+        .getElementById(
+            "organism-place"
+        )
         .value = "";
 
+
     document
-        .getElementById("organism-note")
+        .getElementById(
+            "organism-date"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "organism-note"
+        )
         .value = "";
 
 
@@ -335,11 +439,7 @@ registerButton.addEventListener("click", () => {
     imagePreviewContainer.style.display =
         "none";
 
-
-    // 図鑑を更新
-    displayOrganisms();
-
-});
+}
 
 
 // ====================
@@ -349,7 +449,9 @@ registerButton.addEventListener("click", () => {
 function displayOrganisms() {
 
     const catalogList =
-        document.getElementById("catalog-list");
+        document.getElementById(
+            "catalog-list"
+        );
 
 
     if (!catalogList) {
@@ -357,18 +459,13 @@ function displayOrganisms() {
     }
 
 
-    // 保存データを取得
     const organisms =
-        JSON.parse(
-            localStorage.getItem("organisms")
-        ) || [];
+        getOrganisms();
 
 
-    // 一度空にする
     catalogList.innerHTML = "";
 
 
-    // データがない場合
     if (organisms.length === 0) {
 
         catalogList.innerHTML = `
@@ -382,91 +479,178 @@ function displayOrganisms() {
     }
 
 
-    // 新しい順
     organisms
         .slice()
         .reverse()
-        .forEach(organism => {
+        .forEach(
+            organism => {
 
-            const card =
-                document.createElement("article");
-
-            card.className =
-                "organism-card";
-
-
-            // 写真
-            if (organism.image) {
-
-                const image =
-                    document.createElement("img");
-
-                image.src = organism.image;
-
-                image.alt = organism.name;
-
-                image.className =
-                    "organism-image";
-
-                card.appendChild(image);
-
-            }
+                const card =
+                    document.createElement(
+                        "article"
+                    );
 
 
-            // 情報
-            const info =
-                document.createElement("div");
-
-            info.className =
-                "organism-info";
+                card.className =
+                    "organism-card";
 
 
-            let html = `
-                <h3>${organism.name}</h3>
-            `;
+                // カードクリック
+                card.addEventListener(
+                    "click",
+                    () => {
+                        showOrganismDetail(
+                            organism.id
+                        );
+                    }
+                );
 
 
-            if (organism.place) {
+                // 写真
+                if (organism.image) {
 
-                html += `
-                    <p>📍 ${organism.place}</p>
+                    const image =
+                        document.createElement(
+                            "img"
+                        );
+
+                    image.src =
+                        organism.image;
+
+                    image.alt =
+                        organism.name;
+
+                    image.className =
+                        "organism-image";
+
+                    card.appendChild(
+                        image
+                    );
+
+                }
+
+
+                // 情報
+                const info =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                info.className =
+                    "organism-info";
+
+
+                info.innerHTML = `
+                    <h3>
+                        ${organism.name}
+                    </h3>
+
+                    ${
+                        organism.place
+                            ? `<p>📍 ${organism.place}</p>`
+                            : ""
+                    }
+
+                    ${
+                        organism.date
+                            ? `<p>📅 ${organism.date}</p>`
+                            : ""
+                    }
                 `;
 
-            }
+
+                card.appendChild(
+                    info
+                );
 
 
-            if (organism.date) {
-
-                html += `
-                    <p>📅 ${organism.date}</p>
-                `;
-
-            }
-
-
-            if (organism.note) {
-
-                html += `
-                    <p>📝 ${organism.note}</p>
-                `;
+                catalogList.appendChild(
+                    card
+                );
 
             }
-
-
-            info.innerHTML = html;
-
-            card.appendChild(info);
-
-            catalogList.appendChild(card);
-
-        });
+        );
 
 }
 
 
 // ====================
-// 起動時に図鑑を読み込む
+// 詳細表示
+// ====================
+
+function showOrganismDetail(id) {
+
+    const organisms =
+        getOrganisms();
+
+
+    const organism =
+        organisms.find(
+            item => item.id === id
+        );
+
+
+    if (!organism) {
+        return;
+    }
+
+
+    alert(
+        `${organism.name}\n\n` +
+        `📍 ${organism.place || "場所未登録"}\n` +
+        `📅 ${organism.date || "日付未登録"}\n\n` +
+        `${organism.note || "メモなし"}`
+    );
+
+}
+
+
+// ====================
+// ステータス更新
+// ====================
+
+function updateStats() {
+
+    const organisms =
+        getOrganisms();
+
+
+    const speciesCount =
+        document.querySelector(
+            ".stats .stat:first-child .stat-number"
+        );
+
+
+    const postCount =
+        document.querySelector(
+            ".stats .stat:nth-child(2) .stat-number"
+        );
+
+
+    if (speciesCount) {
+
+        // 今は登録数を表示
+        speciesCount.textContent =
+            organisms.length;
+
+    }
+
+
+    if (postCount) {
+
+        postCount.textContent =
+            organisms.length;
+
+    }
+
+}
+
+
+// ====================
+// 起動時
 // ====================
 
 displayOrganisms();
-```
+
+updateStats();
