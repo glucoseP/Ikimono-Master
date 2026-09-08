@@ -1,1 +1,98 @@
+:root {
+    --blue: #78909C;
+    --dark-blue: #546E7A;
+    --background: #F4F7F8;
+    --white: #FFFFFF;
+    --text: #37474F;
+}
 
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        sans-serif;
+}
+
+header {
+    background: var(--blue);
+    color: white;
+    padding: 28px 20px;
+    border-radius: 0 0 24px 24px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+header p {
+    margin: 8px 0 0;
+    opacity: 0.9;
+}
+
+main {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 12px rgba(84, 110, 122, 0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 19px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.stat {
+    background: var(--background);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--dark-blue);
+}
+
+.stat-label {
+    font-size: 13px;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    background: var(--blue);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.98);
+}
