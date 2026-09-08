@@ -139,7 +139,6 @@ button {
 button:active {
     transform: scale(0.98);
 }
-
 /* ====================
    下部ナビ
 ==================== */
@@ -156,6 +155,7 @@ button:active {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-around;
 
     background: white;
 
@@ -163,18 +163,19 @@ button:active {
 
     z-index: 100;
 
-    padding-bottom: env(safe-area-inset-bottom);
+    padding: 8px 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
 }
 
 /* ナビボタン */
 
 .bottom-nav .nav-item {
-    flex: 1;
+    flex: 1 1 0;
 
-    width: 25%;
+    width: auto;
     height: 52px;
 
-    margin: 0 8px;
+    margin: 0 4px;
     padding: 0;
 
     border: none;
@@ -190,7 +191,7 @@ button:active {
 
     font-size: 24px;
 
-    transition: 0.15s;
+    transition: transform 0.15s, background 0.15s;
 }
 
 /* 選択中 */
