@@ -1,9 +1,9 @@
 :root {
-    --blue: #00a3af;
-    --dark-blue: #6a7f9b;
-    --background: #F3F8FA;
+    --blue: #00A3AF;       /* 浅葱色：メイン */
+    --dark-blue: #6A7F9B;  /* トワイライトブルー：アクセント */
+    --background: #F4F8F9; /* ほんのり青みの白 */
     --white: #FFFFFF;
-    --text: #40545C;
+    --text: #3F4F5F;
 }
 
 * {
