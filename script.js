@@ -16,13 +16,17 @@ navItems.forEach((item, index) => {
 
         item.classList.add("active");
 
-
         // ページを切り替える
         pages.forEach(page => {
             page.classList.remove("active-page");
         });
 
         pages[index].classList.add("active-page");
+
+        // 図鑑ページを開いたら更新
+        if (pages[index].id === "catalog") {
+            displayOrganisms();
+        }
 
     });
 
@@ -50,7 +54,6 @@ imageInput.addEventListener("change", () => {
 
     const file = imageInput.files[0];
 
-    // 写真が選択されていない場合
     if (!file) {
 
         selectedImage = "";
@@ -62,23 +65,17 @@ imageInput.addEventListener("change", () => {
         return;
     }
 
-
-    // ファイルを読み込む
     const reader = new FileReader();
-
 
     reader.onload = (event) => {
 
-        // Base64形式の画像データ
         selectedImage = event.target.result;
 
-        // プレビューに表示
         imagePreview.src = selectedImage;
 
         imagePreviewContainer.style.display = "block";
 
     };
-
 
     reader.readAsDataURL(file);
 
@@ -95,7 +92,6 @@ const registerButton =
 
 registerButton.addEventListener("click", () => {
 
-    // 入力内容を取得
     const name =
         document
             .getElementById("organism-name")
@@ -120,10 +116,7 @@ registerButton.addEventListener("click", () => {
             .trim();
 
 
-    // ====================
-    // 入力チェック
-    // ====================
-
+    // 名前は必須
     if (!name) {
 
         alert("生き物の名前を入力してね！");
@@ -132,73 +125,48 @@ registerButton.addEventListener("click", () => {
     }
 
 
-    // ====================
     // 保存済みデータを取得
-    // ====================
-
     const organisms =
         JSON.parse(
             localStorage.getItem("organisms")
         ) || [];
 
 
-    // ====================
-    // 新しい生き物を作成
-    // ====================
-
+    // 新しい生き物
     const organism = {
 
-        // 識別用ID
         id: Date.now(),
 
-        // 生き物の名前
         name: name,
 
-        // 発見場所
         place: place,
 
-        // 発見日
         date: date,
 
-        // メモ
         note: note,
 
-        // 写真
         image: selectedImage
 
     };
 
 
-    // ====================
     // データを追加
-    // ====================
-
     organisms.push(organism);
 
 
-    // ====================
-    // localStorageへ保存
-    // ====================
-
+    // 保存
     localStorage.setItem(
         "organisms",
         JSON.stringify(organisms)
     );
 
 
-    // ====================
-    // 完了
-    // ====================
-
     alert(
         `${name}を図鑑に登録したよ！`
     );
 
 
-    // ====================
     // フォームをリセット
-    // ====================
-
     document
         .getElementById("organism-name")
         .value = "";
@@ -215,8 +183,6 @@ registerButton.addEventListener("click", () => {
         .getElementById("organism-note")
         .value = "";
 
-
-    // 写真もリセット
     imageInput.value = "";
 
     selectedImage = "";
@@ -225,4 +191,115 @@ registerButton.addEventListener("click", () => {
 
     imagePreviewContainer.style.display = "none";
 
+
+    // 図鑑も更新
+    displayOrganisms();
+
 });
+
+
+// ====================
+// 図鑑表示
+// ====================
+
+function displayOrganisms() {
+
+    const catalogList =
+        document.getElementById("catalog-list");
+
+    if (!catalogList) {
+        return;
+    }
+
+
+    // 保存データを取得
+    const organisms =
+        JSON.parse(
+            localStorage.getItem("organisms")
+        ) || [];
+
+
+    // 一度空にする
+    catalogList.innerHTML = "";
+
+
+    // 登録されていない場合
+    if (organisms.length === 0) {
+
+        catalogList.innerHTML = `
+            <p class="empty-message">
+                まだ生き物が登録されていません。
+            </p>
+        `;
+
+        return;
+    }
+
+
+    // 新しい順に表示
+    organisms
+        .slice()
+        .reverse()
+        .forEach(organism => {
+
+            const card =
+                document.createElement("article");
+
+            card.className = "organism-card";
+
+
+            // 写真がある場合
+            if (organism.image) {
+
+                card.innerHTML += `
+                    <img
+                        src="${organism.image}"
+                        alt="${organism.name}"
+                        class="organism-image"
+                    >
+                `;
+
+            }
+
+
+            card.innerHTML += `
+                <div class="organism-info">
+
+                    <h3>
+                        ${organism.name}
+                    </h3>
+
+                    ${
+                        organism.place
+                            ? `<p>📍 ${organism.place}</p>`
+                            : ""
+                    }
+
+                    ${
+                        organism.date
+                            ? `<p>📅 ${organism.date}</p>`
+                            : ""
+                    }
+
+                    ${
+                        organism.note
+                            ? `<p>📝 ${organism.note}</p>`
+                            : ""
+                    }
+
+                </div>
+            `;
+
+
+            catalogList.appendChild(card);
+
+        });
+
+}
+
+
+// ====================
+// 起動時に図鑑を読み込む
+// ====================
+
+displayOrganisms();
