@@ -71,30 +71,57 @@
 
     <!-- 記録 -->
     <section id="record" class="page">
-    
+
         <section class="card">
             <h2>📸 生き物を記録</h2>
     
             <div class="record-form">
     
                 <label>
+                    写真
+                    <input
+                        type="file"
+                        id="organism-image"
+                        accept="image/*"
+                    >
+                </label>
+    
+                <div id="image-preview-container">
+                    <img id="image-preview" alt="写真プレビュー">
+                </div>
+    
+                <label>
                     生き物の名前
-                    <input type="text" id="organism-name" placeholder="例：アブラゼミ">
+                    <input
+                        type="text"
+                        id="organism-name"
+                        placeholder="例：アブラゼミ"
+                    >
                 </label>
     
                 <label>
                     見つけた場所
-                    <input type="text" id="organism-place" placeholder="例：さいたま市">
+                    <input
+                        type="text"
+                        id="organism-place"
+                        placeholder="例：さいたま市"
+                    >
                 </label>
     
                 <label>
                     見つけた日
-                    <input type="date" id="organism-date">
+                    <input
+                        type="date"
+                        id="organism-date"
+                    >
                 </label>
     
                 <label>
                     メモ
-                    <textarea id="organism-note" placeholder="気づいたことなど"></textarea>
+                    <textarea
+                        id="organism-note"
+                        placeholder="気づいたことなど"
+                    ></textarea>
                 </label>
     
                 <button id="register-button">
