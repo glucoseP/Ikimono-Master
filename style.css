@@ -1,10 +1,14 @@
 :root {
-    --blue: #00A3AF;       /* 浅葱色：メイン */
-    --dark-blue: #6A7F9B;  /* トワイライトブルー：アクセント */
-    --background: #F4F8F9; /* ほんのり青みの白 */
+    --asagi: #00A3AF;
+    --twilight: #6A7F9B;
+    --background: #F3F8F9;
     --white: #FFFFFF;
     --text: #3F4F5F;
 }
+
+/* ====================
+   基本
+==================== */
 
 * {
     box-sizing: border-box;
@@ -14,6 +18,7 @@ body {
     margin: 0;
     background: var(--background);
     color: var(--text);
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -21,10 +26,16 @@ body {
         sans-serif;
 }
 
+/* ====================
+   ヘッダー
+==================== */
+
 header {
-    background: var(--dark-blue);
+    background: var(--twilight);
     color: white;
+
     padding: 28px 20px;
+
     border-radius: 0 0 24px 24px;
 }
 
@@ -38,19 +49,34 @@ header p {
     opacity: 0.9;
 }
 
+/* ====================
+   メイン
+==================== */
+
 main {
+    width: 100%;
+    max-width: 600px;
+
+    margin: 0 auto;
+
     padding: 20px;
     padding-bottom: 100px;
-    max-width: 600px;
-    margin: 0 auto;
 }
+
+/* ====================
+   カード
+==================== */
 
 .card {
     background: var(--white);
+
     border-radius: 18px;
+
     padding: 20px;
     margin-bottom: 16px;
-    box-shadow: 0 3px 12px rgba(84, 110, 122, 0.08);
+
+    box-shadow:
+        0 3px 12px rgba(84, 110, 122, 0.08);
 }
 
 .card h2 {
@@ -58,103 +84,102 @@ main {
     font-size: 19px;
 }
 
+/* ====================
+   ステータス
+==================== */
+
 .stats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
 .stat {
     background: var(--background);
+
     border-radius: 14px;
+
     padding: 16px;
+
     text-align: center;
 }
 
 .stat-number {
     display: block;
+
     font-size: 25px;
     font-weight: bold;
-    color: var(--dark-blue);
+
+    color: var(--twilight);
 }
 
 .stat-label {
     font-size: 13px;
 }
 
+/* ====================
+   普通のボタン
+==================== */
+
 button {
     width: 100%;
+
     border: none;
     border-radius: 14px;
+
     padding: 15px;
-    background: var(--blue);
+
+    background: var(--asagi);
     color: white;
+
     font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
 }
 
 button:active {
     transform: scale(0.98);
 }
+
+/* ====================
+   下部ナビ
+==================== */
+
 .bottom-nav {
     position: fixed;
-    bottom: 0;
+
     left: 0;
     right: 0;
+    bottom: 0;
 
     height: 64px;
 
-    background: rgba(255, 255, 255, 0.96);
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    flex-direction: row;
+
+    background: white;
 
     border-top: 1px solid #E2EAED;
-    padding-bottom: env(safe-area-inset-bottom);
 
     z-index: 100;
 }
 
-.nav-item {
-    width: 25%;
-    height: 64px;
+/* ナビのボタン */
 
-    background: transparent;
-    color: #6A7F9B;
-
-    border: none;
-    border-radius: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 25px;
-    cursor: pointer;
-}
-
-.nav-item.active {
-    color: #00A3AF;
-}
-
-.nav-item small {
-    font-size: 11px;
-}
-
-.nav-item.active {
-    color: #00A3AF;
-}
 .bottom-nav .nav-item {
+    flex: 1;
+
     width: 25%;
-    min-width: 0;
     height: 64px;
+
+    margin: 0;
     padding: 0;
-    
-    background: transparent;
-    color: #6A7F9B;
+
     border: none;
     border-radius: 0;
+
+    background: transparent;
+
+    color: var(--twilight);
 
     display: flex;
     align-items: center;
@@ -162,7 +187,9 @@ button:active {
 
     font-size: 25px;
 }
+
+/* 選択中 */
 
 .bottom-nav .nav-item.active {
-    color: #00A3AF;
+    color: var(--asagi);
 }
